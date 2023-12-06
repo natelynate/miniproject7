@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Dimension by HTML5 UP</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+        <noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
+    </head>
+
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper">
+            <!-- Header -->
+            <header id="header">
+                <div class="content">
+                    <div class="inner">
+                        <h1>2. 수어로 CHATGPT와 대화하기</h1>
+                    </div>
+                </div>
+            </header>
+            <div>
+                <form action="chat" method="post" entype="application/x-www-form-urlencoded">
+                    {% csrf_token %}
+                    <div id="file-module-0">
+                        <label>당신의 말</label>
+                        <textarea id="question" name="question">{{question}}</textarea>
+                    </div>
+                    <br>
+                    <div>
+                      <label>ChatGPT의 답</label>
+                      
+                      <header id="header">
+                        <div class="content">
+                            <div class="inner">
+                                <span id="result">{{result}}</span>
+                            </div>
+                        </div>
+                    </header>
+                  </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- BG -->
+        <div id="bg"></div>
+
+        <!-- Scripts -->
+        <!-- JavaScript 파일 경로 수정 -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/browser.min.js' %}"></script>
+        <script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+
+    </body>
+</html>

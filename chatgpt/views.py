@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from openai import OpenAI
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="")
 # Create your views here.
 
 #chatGPT에게 채팅 요청 API
@@ -15,9 +15,9 @@ def chatGPT(prompt):
 #chatGPT에게 그림 요청 API
 def imageGPT(prompt):
     response = client.images.generate(prompt=prompt,
-    n=1,
-    size="256x256")
-    result =response['data'][0]['url']
+                                      n=1,
+                                      size="256x256")
+    result = response['data'][0]['url']
     return result
 
 def index(request):
@@ -26,7 +26,6 @@ def index(request):
 def chat(request):
     #post로 받은 question
     prompt = request.POST.get('question')
-
 
     #type가 text면 chatGPT에게 채팅 요청 , type가 image면 imageGPT에게 채팅 요청
     result = chatGPT(prompt)

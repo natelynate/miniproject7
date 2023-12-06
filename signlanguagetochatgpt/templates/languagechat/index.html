@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Dimension by HTML5 UP</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+        <noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
+        <script>
+            let idNum = 0;
+            function addFile() {
+                const original = document.getElementById('file-module-' + idNum);
+                const clone = original.cloneNode(true);
+                idNum++;
+                clone.id = 'file-module-' + idNum;
+                // 'name' 속성 변경 없음
+                original.parentNode.insertBefore(clone, original.nextSibling);
+            }
+        </script>
+    </head>
+
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper">
+            <!-- Header -->
+            <header id="header">
+                <div class="content">
+                    <div class="inner">
+                        <h1>2. 수어 이미지 업로드</h1>
+                    </div>
+                </div>
+            </header>
+            <form action="chat" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <span id="file-module-0">
+                    <div>
+                        <fieldset>
+                            <input name="files[]" type="file"> <!-- 배열 형태로 'name' 속성 설정 --> <button onclick="addFile()" type="button">파일 추가</button>
+                        </fieldset>
+                    </div>
+                </span>
+                <br>
+                <br>
+                <br>
+                <div><input type="submit" value="ChatGPT에게 수어로 문의하기"></div>
+            </form>
+            Hello, World!
+            
+        </div>
+
+        <!-- BG -->
+        <div id="bg"></div>
+
+        <!-- Scripts -->
+        <!-- JavaScript 파일 경로 수정 -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/browser.min.js' %}"></script>
+        <script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+
+    </body>
+</html>

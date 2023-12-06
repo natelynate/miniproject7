@@ -1,54 +1,73 @@
-{% load static %}
-{% block extrahead %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
-    <title>Chat with ChatGPT</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/bg.jpg' %}");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            position: relative; /* Add this for z-index stacking */
-        }
-    
-        /* Other styles for your content */
-        div {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            /* Make sure the content appears above the overlay */
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Add your form styles here */
-    </style>
-</head>
-<body>
-    <div>
-        <form action="chat" method="post" entype="application/x-www-form-urlencoded">
-            {% csrf_token %}
-            <div id="file-module-0">
-                <label>chatgtp에게 요청하기</label>
-                <textarea id="question" name="question">{{question}}</textarea>
-            </div>
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Dimension by HTML5 UP</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+        <noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
+        <script>
+            let idNum = 0;
+            function addFile() {
+                const original = document.getElementById('file-module-' + idNum);
+                const clone = original.cloneNode(true);
+                idNum++;
+                clone.id = 'file-module-' + idNum;
+                // 'name' 속성 변경 없음
+                original.parentNode.insertBefore(clone, original.nextSibling);
+            }
+        </script>
+    </head>
+
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper">
+            <!-- Header -->
+            <header id="header">
+                <div class="content">
+                    <div class="inner">
+                        <h1>1. ChatGPT와 대화하기</h1>
+                    </div>
+                </div>
+            </header>
             <div>
-              <label>응답</label>
-              <span id="result">{{result}}</span>
-          </div>
-            <div><button id="text-button" type="submit" >질문</button></div>
-        </form>
-    </div>
-    <!-- Add the background overlay div -->
-    <div class="background-overlay"></div>
-</body>
+                <form action="chat" method="post" entype="application/x-www-form-urlencoded">
+                    {% csrf_token %}
+                    <div id="file-module-0">
+                        <label>당신의 말</label>
+                        <textarea id="question" name="question">{{question}}</textarea>
+                    </div>
+                    <br>
+                    <div>
+                      <label>ChatGPT의 답</label>
+                      
+                      <header id="header">
+                        <div class="content">
+                            <div class="inner">
+                                <span id="result">{{result}}</span>
+                            </div>
+                        </div>
+                    </header>
+                  </div>
+                    <div><button id="text-button" type="submit" >질문</button></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- BG -->
+        <div id="bg"></div>
+
+        <!-- Scripts -->
+        <!-- JavaScript 파일 경로 수정 -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/browser.min.js' %}"></script>
+        <script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+
+    </body>
 </html>
-{% endblock %}
+
 

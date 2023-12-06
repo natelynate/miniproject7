@@ -12,6 +12,14 @@ from chatgpt.views import chatGPT
 logger = logging.getLogger('mylogger')
 #signlanguage/models.py의 Result 모델을 import한다.
 from .models import ChatResult, Result
+# model_path = './mlruns/3/9c40519238064b8287170056a49c1568/artifacts/model'
+# model = mlflow.keras.load_model(model_path)
+
+mlflow_uri = "http://mlflow.carpediem.so"
+mlflow.set_tracking_uri(mlflow_uri)
+model_uri = "models:/model_06/1" 
+model_path = "models:/model_06/latest"
+model = mlflow.keras.load_model(model_uri)
 # Create your views here.
 
 '''
@@ -28,86 +36,64 @@ def getChatResult(self, id):
 def index(request):
     return render(request, 'languagechat/index.html')
 
+def load_and_preprocess_image(file):
+    image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+
+    image = cv2.resize(image, (28, 28))
+
+    image = image.reshape(1, 28, 28, 1)
+    image = image / 255.0
+
+    return image
+
+class_names = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+
+def predict_letter(file):
+    processed_image = load_and_preprocess_image(file)
+    pred_probs = model.predict(processed_image)
+    pred_index = np.argmax(pred_probs[0])
+    predicted_letter = class_names[pred_index]
+
+    return predicted_letter
+
 def chat(request):
-    if request.method == 'POST' and request.FILES['files']:
+    if request.method == 'POST':
+        files = request.FILES.getlist('files[]')
+        if not files:
+            return render(request, 'languagechat/error.html', {'error': '파일이 업로드되지 않았습니다.'})
 
-        results=[]
-        #form에서 전송한 파일을 획득한다.
-        #각 파일별 예측 결과들을 모아야 질문을 위한 언어가 완성된다.
-        files = request.FILES.getlist('files')
+        results = []
         chatGptPrompt = ""
-        for idx,file in enumerate(files, start=0):
-                # files:
-
-            # logger.error('file', file)
-            # class names 준비
-            class_names = list(string.ascii_lowercase)
-            class_names = np.array(class_names)
-
-
-            # mlflow 로딩
-            mlflow_uri="http://mini7-mlflow.carpediem.so/"
-            mlflow.set_tracking_uri(mlflow_uri)
-            model_uri = "models:/Sign_Signal/production"
-            model = mlflow.keras.load_model(model_uri)
-
-
-            # history 저장을 위해 객체에 담아서 DB에 저장한다.
-            # 이때 파일시스템에 저장도 된다.
-            result = Result()
-            result.image = file
-            result.pub_date = timezone.datetime.now()
-            result.save()
-
-
-            # 흑백으로 읽기
-            img = cv2.imread(result.image.path, cv2.IMREAD_GRAYSCALE)
-
-            # 크기 조정
-            img = cv2.resize(img, (28, 28))
-
-            # input shape 맞추기
-            test_sign = img.reshape(1, 28, 28, 1)
-
-            # 스케일링
-            test_sign = test_sign / 255.
-
-            # 예측 : 결국 이 결과를 얻기 위해 모든 것을 했다.
-            pred = model.predict(test_sign)
-            pred_1 = pred.argmax(axis=1)
-
-            result_str = class_names[pred_1][0]
-
-
-            #결과를 DB에 저장한다.
-            result.result = result_str
-            # result.is_correct = 
-            result.save()
-            results.append(result)
-
-            #result.result의 결과를 하나씩 chatGptPrompt에 추가한다.
-            chatGptPrompt += result.result
         
-        #질문을 DB에 저장한다.
-        chatResult = ChatResult()
-        chatResult.prompt = chatGptPrompt
-        chatResult.pub_date = timezone.datetime.now()
-        chatResult.save()
+        for idx, file in enumerate(files, start=0):
+            try:
+                # 파일 처리 및 모델 예측
+                letter = predict_letter(file)
+                results.append(letter)
+                chatGptPrompt += letter
 
+            except Exception as e:
+                logger.error(f"파일 처리 중 오류 발생: {e}")
+                return render(request, 'languagechat/error.html', {'error': '파일 처리 중 오류가 발생했습니다.'})
 
-        #저장된 질문을 DB에서 가져온다.
-        selectedChatResult = ChatResult.objects.get(id=chatResult.id)
+        # ChatGPT 대화 처리
+        try:
+            chatResult = ChatResult(prompt=chatGptPrompt, pub_date=timezone.now())
+            chatResult.save()
 
-        #chatGptPrompt를 chatGPT에게 전달한다.
-        content = chatGPT(selectedChatResult.prompt)
-        selectedChatResult.content = content
-        selectedChatResult.save()
-        
-     
+            content = chatGPT(chatResult.prompt)
+            chatResult.content = content
+            chatResult.save()
 
-        context = {
-        'question': selectedChatResult.prompt,
-        'result': selectedChatResult.content
-    }
+            context = {
+                'question': chatResult.prompt,
+                'result': chatResult.content,
+                'predictions': results  # 예측 결과 추가
+            }
+        except Exception as e:
+            logger.error(f"ChatGPT 처리 중 오류 발생: {e}")
+            return render(request, 'languagechat/error.html', {'error': 'ChatGPT 처리 중 오류가 발생했습니다.'})
 
-    return render(request, 'languagechat/result.html', context)  
+        return render(request, 'languagechat/result.html', context)
+    else:
+        return render(request, 'languagechat/index.html')
