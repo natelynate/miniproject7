@@ -1,0 +1,21 @@
+local
+conda create -n mini7 python=3.11 -y
+conda env list
+conda activate mini7 
+pip install -r requirements.txt
+python manage.py runserver
+
+
+server
+mkdir deploy
+ll
+wget https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh
+shasum -a 256 /home/ubuntu/Anaconda3-2023.07-1-Linux-x86_64.sh
+bash ./Anaconda3-2023.07-1-Linux-x86_64.sh
+conda create -n mini7 python=3.11 -y
+conda env list
+conda activate mini7 
+cd deploy/mini7
+pip install -r requirements_linux.txt
+sudo apt install libgl1-mesa-glx
+sudo /home/ubuntu/anaconda3/envs/mini7/bin/python manage.py runserver 0:80

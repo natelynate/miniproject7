@@ -1,0 +1,60 @@
+{% load static %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'gtp/style.css' %}">
+<style>
+    body {
+        font-family: Arial, sans-serif; /* 폰트 스타일 */
+        background-color: #f9f9f9; /* 배경색 */
+        color: #333; /* 기본 텍스트 색상 */
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px; /* 폼의 최대 너비 */
+        margin: 0 auto; /* 중앙 정렬 */
+        padding: 20px; /* 패딩 */
+        background-color: white; /* 폼 배경색 */
+        border-radius: 10px; /* 테두리 둥글기 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    }
+
+    textarea {
+        width: 100%; /* 너비 100% */
+        padding: 10px; /* 패딩 */
+        margin-top: 10px; /* 상단 여백 */
+        border: 1px solid #ddd; /* 테두리 색상 */
+        border-radius: 5px; /* 테두리 둥글기 */
+        box-sizing: border-box; /* 박스 사이징 */
+    }
+
+    button {
+        background-color: #007BFF; /* 버튼 배경색 */
+        color: white; /* 버튼 텍스트 색상 */
+        padding: 10px 15px; /* 패딩 */
+        border: none; /* 테두리 없음 */
+        border-radius: 5px; /* 테두리 둥글기 */
+        margin-top: 10px; /* 상단 여백 */
+        cursor: pointer; /* 커서 스타일 */
+    }
+
+    button:hover {
+        background-color: #0056b3; /* 호버 시 버튼 색상 */
+    }
+
+    #file-module-0, #text-button {
+        margin: 10px 0; /* 마진으로 요소 간 간격 조정 */
+    }
+</style>
+{% endblock %}
+<form action="chat" method="post" entype="application/x-www-form-urlencoded">
+    {% csrf_token %}
+    <div id="file-module-0">
+        <label>chatgtp에게 요청하기</label>
+        <textarea id="question" name="question"></textarea>
+    </div>
+    <div><button id="text-button" type="submit" class="w-btn w-btn-green">질문</button></div>
+    <div id="bg"></div>
+</form>

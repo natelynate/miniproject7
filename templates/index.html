@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Dimension by HTML5 UP</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+        <noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
+    </head>
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+            <header id="header">
+                <span class="image main" style="display: flex; justify-content: center;">
+                    <!-- 이미지 경로 수정 -->
+                    <img src="{% static 'images/hand2.png' %}" alt="" style="width: 200px; filter: invert(100%);" />
+                </span>
+                <div class="content">
+                    <div class="inner">
+                        <h1>GPT를 통한 수어 자동 번역</h1>
+                        <p>수화(手話) 또는 손말은 소리가 아닌 손짓을 이용해서 뜻을 전달하는 언어이다. <br />
+                           수화는 손가락이나 팔로 그리는 모양, 그 위치나 이동, 표정이나 입술의 움직임 등을 종합하여 행해진다.</p>
+                    </div>
+                </div>
+                <nav>    
+                    <ul>
+                        <li><a href="/chatgpt/">ChatGPT API 사용</a></li>
+                        <li><a href="/signlanguagetochatgpt/">수어-ChatGPT 연동</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+
+        <!-- BG -->
+        <div id="bg"></div>
+
+        <!-- Scripts -->
+        <!-- JavaScript 파일 경로 수정 -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/browser.min.js' %}"></script>
+        <script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+
+    </body>
+</html>
